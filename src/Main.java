@@ -12,7 +12,8 @@ public class Main
     {
         // ====================================== Подготовка ======================================================
 
-        bank = Bank.getInstance();long amount;// создаем банк: 1000 счетов
+        bank = Bank.getInstance();
+        long amount;// создаем банк: 1000 счетов
         ExecutorService executor = Executors.newFixedThreadPool(100);// Создаем пул с лимитом 100 потоков
         long now = System.currentTimeMillis();
         int interval = 2000;// стартовый темп выполнения транзакций
@@ -38,22 +39,23 @@ public class Main
             amount = (Math.random() > 0.05) ? Math.round(Math.random() * 10000 + 100) : 55000;
             executor.submit(new TransferMaker(start,i,from,to,amount));
         }
-        //============= Конец стресстеста, тормозим адскую машинку, время рстановки 60 сек. ====================
+        //============= Конец стресстеста, тормозим адскую машинку, время рстановки 120 сек. ====================
         try {
             System.out.println("<<<<<<< Подготовка к остановке Executor >>>>>>>>>");
             executor.shutdown();
-            executor.awaitTermination(60, TimeUnit.SECONDS);
+            executor.awaitTermination(120, TimeUnit.SECONDS);
         }
         catch (InterruptedException e) {
             System.err.println("tasks interrupted");
         }
-        //========================== прерываем незавершившиеся процессы за 60 сек ===================================
+        //========================== прерываем незавершившиеся процессы за 120 сек ===================================
         finally {
             if (!executor.isTerminated()) {
                 System.err.println("cancel non-finished tasks");
             }
             executor.shutdownNow();
             System.out.println("<<<<<<< Executor остановлен >>>>>>>");
+            System.out.printf("%nКоличество блокировок по транзакциям - %d%n",Bank.getBlockCount());
         }
     }
 

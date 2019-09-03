@@ -21,7 +21,7 @@ public class TransferMaker implements Runnable
         System.out.printf("    <Начальные остатки> from: %-10d  to: %d%n"
                 ,Main.bank.getBalance(accountFrom),Main.bank.getBalance(accountTo));
         try {
-            Main.bank.transfer(accountFrom,accountTo,amount);
+            Main.bank.transfer(accountFrom,accountTo,amount,transferNum);
         } catch (InterruptedException e) {
             e.printStackTrace();
         }
